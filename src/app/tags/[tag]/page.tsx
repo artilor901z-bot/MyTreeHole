@@ -3,7 +3,9 @@ import PostCard from '@/components/PostCard';
 
 export async function generateStaticParams() {
   const tags = await getAllTags();
-  return tags.map((t) => ({ tag: encodeURIComponent(t.tag) }));
+  // 传原始中文，让 Next.js 自己处理 URL 编码；预编码会让磁盘上的目录名
+  // 和实际请求路径不一致，GH Pages 在 URL-decode 后找不到文件 → 404
+  return tags.map((t) => ({ tag: t.tag }));
 }
 
 export default async function TagPage({ params }: { params: { tag: string } }) {

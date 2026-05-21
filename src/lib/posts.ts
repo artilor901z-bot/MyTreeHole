@@ -18,6 +18,7 @@ export interface PostFrontmatter {
   cover?: string;      // public 下的图片路径，例如 /images/foo.jpg
   excerpt?: string;
   draft?: boolean;
+  hideDate?: boolean;  // 不在文章页/卡片显示日期（仍用于排序与节气计算）
 }
 
 export interface Post extends PostFrontmatter {
@@ -50,6 +51,8 @@ function fileToSlug(filename: string): string {
   return filename.replace(/\.(md|mdx)$/i, '');
 }
 
+const BASE = process.env.NEXT_PUBLIC_BASE_PATH || '';
+
 async function renderMarkdown(md: string): Promise<string> {
   const file = await unified()
     .use(remarkParse)
@@ -58,7 +61,14 @@ async function renderMarkdown(md: string): Promise<string> {
     .use(rehypeRaw)
     .use(rehypeStringify)
     .process(md);
-  return String(file);
+  let html = String(file);
+  // 给 markdown 里的根绝对路径 (/images/foo.jpg, /posts/...) 自动加上 basePath
+  // 避免部署到 GitHub Project Pages (/MyTreeHole/) 时图片/链接 404
+  if (BASE) {
+    html = html.replace(/(<img\b[^>]*?\bsrc=)"\/(?!\/)/g, `$1"${BASE}/`);
+    html = html.replace(/(<a\b[^>]*?\bhref=)"\/(?!\/)/g, `$1"${BASE}/`);
+  }
+  return html;
 }
 
 function stripMarkdown(md: string): string {
@@ -88,6 +98,7 @@ async function readPost(filename: string): Promise<Post> {
     cover: fm.cover,
     excerpt: fm.excerpt || stripMarkdown(content).slice(0, 80),
     draft: fm.draft,
+    hideDate: fm.hideDate,
     contentHtml,
     contentText: stripMarkdown(content),
     solarTerm: term.name,

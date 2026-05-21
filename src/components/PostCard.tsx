@@ -40,7 +40,7 @@ export default function PostCard({ post }: { post: PostMeta }) {
       {post.tags && post.tags.length > 0 && (
         <div className="row-foot">
           {post.tags.map((t) => (
-            <Link key={t} href={`/tags/${encodeURIComponent(t)}/`} className="tag-chip">
+            <Link key={t} href={`/tags/${t}/`} className="tag-chip">
               {t}
             </Link>
           ))}

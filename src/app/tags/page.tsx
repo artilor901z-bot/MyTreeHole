@@ -20,7 +20,7 @@ export default async function TagsPage() {
           {tags.map((t) => (
             <Link
               key={t.tag}
-              href={`/tags/${encodeURIComponent(t.tag)}/`}
+              href={`/tags/${t.tag}/`}
               style={{ fontSize: 16 + Math.min(t.count, 10) * 2 }}
             >
               #{t.tag}

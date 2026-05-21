@@ -33,16 +33,18 @@ export default async function PostPage({ params }: { params: { slug: string } })
   return (
     <article className="article">
       <header className="article-head">
-        <div className="meta">
-          <span>{formatYMD(post.date)}</span>
-          <span className="dot">·</span>
-          <span>{formatChineseDate(post.date)}</span>
-          {mood && (<><span className="dot">·</span><span>{mood.symbol} {mood.label}</span></>)}
-          {weather && (<><span className="dot">·</span><span>{weather.symbol} {weather.label}</span></>)}
-        </div>
+        {!post.hideDate && (
+          <div className="meta">
+            <span>{formatYMD(post.date)}</span>
+            <span className="dot">·</span>
+            <span>{formatChineseDate(post.date)}</span>
+            {mood && (<><span className="dot">·</span><span>{mood.symbol} {mood.label}</span></>)}
+            {weather && (<><span className="dot">·</span><span>{weather.symbol} {weather.label}</span></>)}
+          </div>
+        )}
         <div className="ornament" />
         <h1>{post.title}</h1>
-        {term && (
+        {term && !post.hideDate && (
           <div className="term-line">
             {term.name} · {term.blurb}
           </div>
@@ -58,7 +60,7 @@ export default async function PostPage({ params }: { params: { slug: string } })
       {post.tags && post.tags.length > 0 && (
         <div className="article-tags">
           {post.tags.map((t) => (
-            <Link key={t} href={`/tags/${encodeURIComponent(t)}/`}>{t}</Link>
+            <Link key={t} href={`/tags/${t}/`}>{t}</Link>
           ))}
         </div>
       )}
