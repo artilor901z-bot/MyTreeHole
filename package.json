@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "description": "一个文艺、私密、属于自己的树洞博客 · A personal serif-typed journal blog",
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "index": "node scripts/build-search-index.mjs",
     "predev": "node scripts/build-search-index.mjs",

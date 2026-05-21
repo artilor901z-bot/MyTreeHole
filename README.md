@@ -48,6 +48,28 @@ weather: 晴      # 见 src/lib/moods.ts
 正文……
 ```
 
+## 国内访问 · Cloudflare Pages 镜像
+
+`*.github.io` 在国内常被污染，对国内读者不友好。镜像一份到 Cloudflare Pages 解决：
+
+1. 注册 / 登录 https://dash.cloudflare.com（免费、不需要信用卡）
+2. 左栏 **Workers & Pages** → **Create** → **Pages** → **Connect to Git**
+3. 授权 Cloudflare 访问你的 GitHub → 选 `MyTreeHole`
+4. 构建配置：
+   - **Project name**: `mytreehole`（决定 URL：`mytreehole.pages.dev`）
+   - **Production branch**: `main`
+   - **Framework preset**: `Next.js (Static HTML Export)` 或 None
+   - **Build command**: `npm run build`
+   - **Build output directory**: `out`
+   - **Environment variables**: 留空（**不要**设 `NEXT_PUBLIC_BASE_PATH`，CF Pages 部署到根路径）
+5. **Save and Deploy**
+
+部署完毕：
+- 国际访问：原来的 `artilor901z-bot.github.io/MyTreeHole/`（仍然由 GitHub Actions 自动维护）
+- 国内访问：新的 `mytreehole.pages.dev`（CF Pages 监听 main 分支自动重建）
+
+> 💡 Cusdis 评论：默认按 APP_ID 工作，跨域名无需改设置。如想严格限制来源，可以到 cusdis 后台把新域名加进允许列表。
+
 ## 发布到 GitHub Pages
 
 1. 把整个项目 push 到 GitHub
