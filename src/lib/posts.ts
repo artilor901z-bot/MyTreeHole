@@ -9,6 +9,8 @@ import rehypeRaw from 'rehype-raw';
 import rehypeStringify from 'rehype-stringify';
 import { getSolarTerm } from './solarTerms';
 
+export type PostCategory = 'journal' | 'game';
+
 export interface PostFrontmatter {
   title: string;
   date: string;        // YYYY-MM-DD
@@ -19,6 +21,7 @@ export interface PostFrontmatter {
   excerpt?: string;
   draft?: boolean;
   hideDate?: boolean;  // 不在文章页/卡片显示日期（仍用于排序与节气计算）
+  category?: PostCategory; // 'journal' (默认 · 树洞) 或 'game' (游戏日志)
 }
 
 export interface Post extends PostFrontmatter {
@@ -99,6 +102,7 @@ async function readPost(filename: string): Promise<Post> {
     excerpt: fm.excerpt || stripMarkdown(content).slice(0, 80),
     draft: fm.draft,
     hideDate: fm.hideDate,
+    category: fm.category || 'journal',
     contentHtml,
     contentText: stripMarkdown(content),
     solarTerm: term.name,
@@ -126,6 +130,11 @@ export async function getAllPostMeta(): Promise<PostMeta[]> {
   return posts.map(({ contentHtml: _h, contentText: _t, ...meta }) => meta);
 }
 
+export async function getPostMetaByCategory(cat: PostCategory): Promise<PostMeta[]> {
+  const all = await getAllPostMeta();
+  return all.filter((p) => (p.category || 'journal') === cat);
+}
+
 export async function getPostBySlug(slug: string): Promise<Post | undefined> {
   const posts = await getAllPosts();
   return posts.find((p) => p.slug === slug);
@@ -143,12 +152,19 @@ export async function getAllTags(): Promise<{ tag: string; count: number }[]> {
 }
 
 /** 给定今天的日期，返回历史上同一天/同一节气的旧日志，用作"去年今日" */
-export async function getOnThisDay(today: Date = new Date()): Promise<PostMeta[]> {
+export async function getOnThisDay(
+  today: Date = new Date(),
+  category?: PostCategory
+): Promise<PostMeta[]> {
   const posts = await getAllPostMeta();
   const m = today.getMonth() + 1;
   const d = today.getDate();
   return posts.filter(
-    (p) => p.month === m && p.day === d && p.year < today.getFullYear()
+    (p) =>
+      p.month === m &&
+      p.day === d &&
+      p.year < today.getFullYear() &&
+      (!category || (p.category || 'journal') === category)
   );
 }
 

@@ -6,6 +6,7 @@ import ThemeToggle from './ThemeToggle';
 // 写的东西也只在他们自己的浏览器里，不会进入这个博客）。
 const NAV = [
   { href: '/',         label: '日志' },
+  { href: '/games/',   label: '游戏日志' },
   { href: '/archive/', label: '归档' },
   { href: '/tags/',    label: '标签' },
   { href: '/search/',  label: '寻字' },

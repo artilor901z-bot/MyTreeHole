@@ -1,13 +1,13 @@
 import Link from 'next/link';
-import { getAllPostMeta, getOnThisDay } from '@/lib/posts';
+import { getPostMetaByCategory, getOnThisDay } from '@/lib/posts';
 import PostCard from '@/components/PostCard';
 import TodayBlock from '@/components/TodayBlock';
 import ExportButton from '@/components/ExportButton';
 
 export default async function Home() {
   const [posts, onThisDay] = await Promise.all([
-    getAllPostMeta(),
-    getOnThisDay(),
+    getPostMetaByCategory('journal'),
+    getOnThisDay(new Date(), 'journal'),
   ]);
   const recent = posts.slice(0, 10);
 

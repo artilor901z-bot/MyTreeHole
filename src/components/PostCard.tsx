@@ -11,6 +11,12 @@ export default function PostCard({ post }: { post: PostMeta }) {
     <article className="post-row">
       <Link href={`/posts/${post.slug}/`} className="row-link">
         <div className="meta">
+          {post.category === 'game' && (
+            <>
+              <span style={{ color: 'var(--accent)', letterSpacing: '0.2em' }}>GAME</span>
+              <span className="dot">·</span>
+            </>
+          )}
           {!post.hideDate && (
             <>
               <span>{formatYMD(post.date)}</span>

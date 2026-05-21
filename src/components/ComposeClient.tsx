@@ -45,6 +45,7 @@ function renderPreview(md: string): string {
 export default function ComposeClient() {
   const [date, setDate] = useState(today());
   const [title, setTitle] = useState('');
+  const [category, setCategory] = useState<'journal' | 'game'>('journal');
   const [mood, setMood] = useState('');
   const [weather, setWeather] = useState('');
   const [tags, setTags] = useState('');
@@ -67,6 +68,7 @@ export default function ComposeClient() {
         const d = JSON.parse(raw);
         setDate(d.date || today());
         setTitle(d.title || '');
+        setCategory(d.category === 'game' ? 'game' : 'journal');
         setMood(d.mood || '');
         setWeather(d.weather || '');
         setTags(d.tags || '');
@@ -78,9 +80,9 @@ export default function ComposeClient() {
   useEffect(() => {
     localStorage.setItem(
       'compose-draft',
-      JSON.stringify({ date, title, mood, weather, tags, body })
+      JSON.stringify({ date, title, category, mood, weather, tags, body })
     );
-  }, [date, title, mood, weather, tags, body]);
+  }, [date, title, category, mood, weather, tags, body]);
 
   const frontmatter = useMemo(() => {
     const tagList = tags
@@ -88,12 +90,13 @@ export default function ComposeClient() {
       .map((t) => t.trim())
       .filter(Boolean);
     const lines = ['---', `title: ${title || '无题'}`, `date: ${date}`];
+    if (category === 'game') lines.push(`category: game`);
     if (tagList.length) lines.push(`tags: [${tagList.map((t) => `"${t}"`).join(', ')}]`);
     if (mood) lines.push(`mood: ${mood}`);
     if (weather) lines.push(`weather: ${weather}`);
     lines.push('---', '');
     return lines.join('\n');
-  }, [title, date, tags, mood, weather]);
+  }, [title, date, category, tags, mood, weather]);
 
   const fullMd = frontmatter + (body || '');
   const previewHtml = useMemo(() => renderPreview(body), [body]);
@@ -140,6 +143,37 @@ export default function ComposeClient() {
         在此写完后，点「下载 .md」把文件放进项目的 <code>posts/</code> 目录；
         若有图片，把它们放进 <code>public/images/</code>。
         然后 <code>git push</code>，GitHub Pages 会自动重新构建。
+      </div>
+
+      <div style={{ marginBottom: 18 }}>
+        <label>类型</label>
+        <div style={{ display: 'flex', gap: 8 }}>
+          {([
+            { v: 'journal', label: '日志（树洞）' },
+            { v: 'game',    label: '游戏日志' },
+          ] as const).map((opt) => (
+            <button
+              key={opt.v}
+              type="button"
+              onClick={() => setCategory(opt.v)}
+              style={{
+                padding: '8px 16px',
+                border: '1px solid',
+                borderColor: category === opt.v ? 'var(--accent)' : 'var(--line)',
+                color: category === opt.v ? 'var(--accent)' : 'var(--ink-2)',
+                background: category === opt.v ? 'var(--accent-soft)' : 'transparent',
+                fontFamily: 'inherit',
+                fontSize: 13,
+                cursor: 'pointer',
+                letterSpacing: '0.1em',
+                transition: 'all 0.18s var(--ease)',
+                flex: 1,
+              }}
+            >
+              {opt.label}
+            </button>
+          ))}
+        </div>
       </div>
 
       <div className="compose-row two">
