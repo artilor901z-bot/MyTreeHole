@@ -33,18 +33,30 @@ export default async function PostPage({ params }: { params: { slug: string } })
   return (
     <article className="article">
       <header className="article-head">
-        {!post.hideDate && (
-          <div className="meta">
-            <span>{formatYMD(post.date)}</span>
-            <span className="dot">·</span>
-            <span>{formatChineseDate(post.date)}</span>
-            {mood && (<><span className="dot">·</span><span>{mood.symbol} {mood.label}</span></>)}
-            {weather && (<><span className="dot">·</span><span>{weather.symbol} {weather.label}</span></>)}
-          </div>
-        )}
+        <div className="meta">
+          {!post.hideDate && (
+            <>
+              <span>{formatYMD(post.date)}</span>
+              <span className="dot">·</span>
+              <span>{formatChineseDate(post.date)}</span>
+            </>
+          )}
+          {mood && (
+            <>
+              {!post.hideDate && <span className="dot">·</span>}
+              <span>{mood.symbol} {mood.label}</span>
+            </>
+          )}
+          {weather && (
+            <>
+              {(mood || !post.hideDate) && <span className="dot">·</span>}
+              <span>{weather.symbol} {weather.label}</span>
+            </>
+          )}
+        </div>
         <div className="ornament" />
         <h1>{post.title}</h1>
-        {term && !post.hideDate && (
+        {term && (
           <div className="term-line">
             {term.name} · {term.blurb}
           </div>

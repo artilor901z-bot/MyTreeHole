@@ -3,8 +3,7 @@ title: Silent Friend · 后来我开始理解沉默
 date: 2026-05-21
 tags: ["电影", "沉默", "告别", "思考"]
 mood: 沉思
-weather: 夜
-hideDate: true
+weather: 晴
 cover: /images/silent-friend.jpg
 excerpt: 5 月 14 号那天晚上很冷。我去看了她一直推荐我看的《Silent Friend》。
 ---

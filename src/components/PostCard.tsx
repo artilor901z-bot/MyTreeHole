@@ -11,8 +11,12 @@ export default function PostCard({ post }: { post: PostMeta }) {
     <article className="post-row">
       <Link href={`/posts/${post.slug}/`} className="row-link">
         <div className="meta">
-          <span>{formatYMD(post.date)}</span>
-          <span className="dot">·</span>
+          {!post.hideDate && (
+            <>
+              <span>{formatYMD(post.date)}</span>
+              <span className="dot">·</span>
+            </>
+          )}
           <span>{post.solarTerm}</span>
           {mood && (
             <>
