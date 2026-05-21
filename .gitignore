@@ -25,9 +25,10 @@ pnpm-debug.log*
 # local env
 .env*.local
 
-# editor
+# editor & IDE
 .vscode/
 .idea/
+.claude/
 
 # typescript
 *.tsbuildinfo
