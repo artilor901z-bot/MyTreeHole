@@ -1,12 +1,17 @@
 import Link from 'next/link';
 import ThemeToggle from './ThemeToggle';
 
+// 「执笔」是写作页，只在本地 dev 时给自己看，部署到线上后不出现在菜单里。
+// 这样陌生访客看不到「写」的入口；但页面本身仍然存在（他们就算猜到 URL，
+// 写的东西也只在他们自己的浏览器里，不会进入这个博客）。
 const NAV = [
   { href: '/',         label: '日志' },
   { href: '/archive/', label: '归档' },
   { href: '/tags/',    label: '标签' },
   { href: '/search/',  label: '寻字' },
-  { href: '/compose/', label: '执笔' },
+  ...(process.env.NODE_ENV !== 'production'
+    ? [{ href: '/compose/', label: '执笔' }]
+    : []),
   { href: '/about/',   label: '关于' },
 ];
 
