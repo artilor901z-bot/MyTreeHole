@@ -83,6 +83,17 @@ weather: 晴      # 见 src/lib/moods.ts
     └── deploy.yml            # GitHub Pages 自动部署
 ```
 
+## 评论系统（Cusdis）
+
+每篇日志底部都有匿名评论区，由 [Cusdis](https://cusdis.com) 提供。
+
+- **管理后台** · https://cusdis.com/dashboard
+- **登录账号** · Huang Junwei Justin
+- **新评论会发邮件到你的 cusdis 注册邮箱**
+- **回复**：在 cusdis dashboard 里点 Reply，或直接在文章页评论框里回复（用 owner 身份会自动加 "owner" 标签）
+- **审核 / 删除**：dashboard 里能直接操作
+- **更换 APP_ID**：编辑 [src/components/Comments.tsx](src/components/Comments.tsx) 顶部那行，或设环境变量 `NEXT_PUBLIC_CUSDIS_APP_ID`
+
 ## 修改外观
 
 - 配色：`src/app/globals.css` 顶部的 CSS 变量（米白 / 印章红 / 墨色）

@@ -5,6 +5,7 @@ import { getAllPosts, getPostBySlug } from '@/lib/posts';
 import { formatYMD, formatChineseDate } from '@/lib/paths';
 import { getMood, getWeather } from '@/lib/moods';
 import { getSolarTermByName } from '@/lib/solarTerms';
+import Comments from '@/components/Comments';
 
 export async function generateStaticParams() {
   const posts = await getAllPosts();
@@ -61,6 +62,8 @@ export default async function PostPage({ params }: { params: { slug: string } })
           ))}
         </div>
       )}
+
+      <Comments pageId={post.slug} pageTitle={post.title} />
 
       <nav className="article-nav">
         <Link href="/">← 回到日志</Link>
