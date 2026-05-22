@@ -94,7 +94,7 @@ excerpt: 昨天和两个很好的朋友出门散心，聊到我们最近在一�
 > **Rebuild the secret base of your childhood, or of a relationship.**
 > 重建，一座童年的秘密基地，或者，和某个人之间的秘密基地。
 
-说完，大家都发自内心地笑了。觉得这个 idea 真的不错。
+说完，大家都笑了。觉得这个 idea 真的不错。
 
 我也很开心。
 
