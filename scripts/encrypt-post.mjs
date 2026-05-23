@@ -27,7 +27,11 @@ import rehypeRaw from 'rehype-raw';
 import rehypeStringify from 'rehype-stringify';
 
 const ITERATIONS = 200000;
-const BASE = process.env.NEXT_PUBLIC_BASE_PATH || '';
+// Default basePath for the GH Pages deployment. Hardcoded here to dodge
+// Git Bash's MSYS path conversion (a leading "/" env-var becomes a Windows
+// path on Windows shells, which broke <img src=…> baked into ciphertext).
+// Override via env when needed:  NEXT_PUBLIC_BASE_PATH='' for root deploys.
+const BASE = process.env.NEXT_PUBLIC_BASE_PATH ?? '/MyTreeHole';
 
 async function renderMarkdown(md) {
   const file = await unified()
