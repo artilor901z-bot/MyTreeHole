@@ -9,7 +9,14 @@ import rehypeRaw from 'rehype-raw';
 import rehypeStringify from 'rehype-stringify';
 import { getSolarTerm } from './solarTerms';
 
-export type PostCategory = 'journal' | 'game';
+export type PostCategory = 'journal' | 'game' | 'whisper';
+
+export interface EncryptionParams {
+  algorithm: 'aes-256-gcm';
+  iterations: number;
+  salt: string; // base64
+  iv: string;   // base64
+}
 
 export interface PostFrontmatter {
   title: string;
@@ -21,15 +28,18 @@ export interface PostFrontmatter {
   excerpt?: string;
   draft?: boolean;
   hideDate?: boolean;  // 不在文章页/卡片显示日期（仍用于排序与节气计算）
-  category?: PostCategory; // 'journal' (默认 · 树洞) 或 'game' (游戏日志)
+  category?: PostCategory; // 'journal' (默认 · 树洞) | 'game' (游戏日志) | 'whisper' (悄悄话 · 加密)
+  encrypted?: boolean; // 内容已用 AES-GCM 加密，正文是 base64(ciphertext+tag)
+  encryption?: EncryptionParams;
 }
 
 export interface Post extends PostFrontmatter {
   slug: string;
-  contentHtml: string;
-  contentText: string;  // 纯文本，用于搜索索引
-  solarTerm: string;    // 节气名
-  solarMood: string;    // 节气推荐情绪
+  contentHtml: string;     // 加密文章 = 空字符串；明文文章 = 已渲染 HTML
+  contentText: string;     // 加密文章 = 空字符串（不进搜索索引）；明文 = 去掉标记的纯文本
+  ciphertext?: string;     // base64(ciphertext + GCM tag)，仅加密文章有
+  solarTerm: string;
+  solarMood: string;
   year: number;
   month: number;
   day: number;
@@ -90,7 +100,15 @@ async function readPost(filename: string): Promise<Post> {
   const fm = data as PostFrontmatter;
   const date = new Date(fm.date);
   const term = getSolarTerm(date);
-  const contentHtml = await renderMarkdown(content);
+  const isEncrypted = !!fm.encrypted;
+
+  // 加密文章：不渲染、不进搜索索引、不生成摘要
+  const contentHtml = isEncrypted ? '' : await renderMarkdown(content);
+  const contentText = isEncrypted ? '' : stripMarkdown(content);
+  const excerpt = isEncrypted
+    ? '🔒 这一篇上了锁'
+    : (fm.excerpt || contentText.slice(0, 80));
+
   return {
     slug: fileToSlug(filename),
     title: fm.title || '无题',
@@ -99,12 +117,15 @@ async function readPost(filename: string): Promise<Post> {
     mood: fm.mood,
     weather: fm.weather,
     cover: fm.cover,
-    excerpt: fm.excerpt || stripMarkdown(content).slice(0, 80),
+    excerpt,
     draft: fm.draft,
     hideDate: fm.hideDate,
     category: fm.category || 'journal',
+    encrypted: isEncrypted,
+    encryption: fm.encryption,
+    ciphertext: isEncrypted ? content.trim() : undefined,
     contentHtml,
-    contentText: stripMarkdown(content),
+    contentText,
     solarTerm: term.name,
     solarMood: term.mood,
     year: date.getFullYear(),

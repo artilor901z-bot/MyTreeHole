@@ -31,6 +31,20 @@ function main() {
       const raw = fs.readFileSync(path.join(POSTS_DIR, file), 'utf8');
       const { data, content } = matter(raw);
       if (data.draft) return null;
+      // 加密文章只贡献 title/date 给索引（永不暴露明文/摘要/正文）
+      if (data.encrypted) {
+        return {
+          slug: fileToSlug(file),
+          title: data.title || '无题',
+          date: data.date,
+          tags: data.tags || [],
+          mood: null,
+          weather: null,
+          excerpt: '🔒 这一篇上了锁',
+          text: '',
+          encrypted: true,
+        };
+      }
       const text = stripMarkdown(content);
       return {
         slug: fileToSlug(file),

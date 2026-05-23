@@ -6,6 +6,7 @@ import { formatYMD, formatChineseDate } from '@/lib/paths';
 import { getMood, getWeather } from '@/lib/moods';
 import { getSolarTermByName } from '@/lib/solarTerms';
 import Comments from '@/components/Comments';
+import EncryptedPost from '@/components/EncryptedPost';
 
 export async function generateStaticParams() {
   const posts = await getAllPosts();
@@ -64,20 +65,30 @@ export default async function PostPage({ params }: { params: { slug: string } })
         <div className="ornament" />
       </header>
 
-      <div
-        className="article-body"
-        dangerouslySetInnerHTML={{ __html: post.contentHtml }}
-      />
+      {post.encrypted && post.ciphertext && post.encryption ? (
+        <EncryptedPost
+          slug={post.slug}
+          ciphertext={post.ciphertext}
+          encryption={post.encryption}
+        />
+      ) : (
+        <>
+          <div
+            className="article-body"
+            dangerouslySetInnerHTML={{ __html: post.contentHtml }}
+          />
 
-      {post.tags && post.tags.length > 0 && (
-        <div className="article-tags">
-          {post.tags.map((t) => (
-            <Link key={t} href={`/tags/${t}/`}>{t}</Link>
-          ))}
-        </div>
+          {post.tags && post.tags.length > 0 && (
+            <div className="article-tags">
+              {post.tags.map((t) => (
+                <Link key={t} href={`/tags/${t}/`}>{t}</Link>
+              ))}
+            </div>
+          )}
+
+          <Comments pageId={post.slug} pageTitle={post.title} />
+        </>
       )}
-
-      <Comments pageId={post.slug} pageTitle={post.title} />
 
       <nav className="article-nav">
         <Link href="/">← 回到日志</Link>

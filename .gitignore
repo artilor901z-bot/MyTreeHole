@@ -30,6 +30,9 @@ pnpm-debug.log*
 .idea/
 .claude/
 
+# 私密文章明文源（只在本地存在；加密后才进 posts/ 仓库）
+posts-secret/
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts
