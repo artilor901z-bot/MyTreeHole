@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Noto_Serif_SC, EB_Garamond } from 'next/font/google';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import PageView from '@/components/PageView';
 import './globals.css';
 
 const serifSC = Noto_Serif_SC({
@@ -53,6 +54,7 @@ export default function RootLayout({
           <main className="main">{children}</main>
           <Footer />
         </div>
+        <PageView />
       </body>
     </html>
   );
