@@ -54,6 +54,36 @@ async function decryptHtml(
 
 const STORAGE_KEY = (slug: string) => `whisper-pwd:${slug}`;
 
+// Owner-only ping: notifies a Discord channel when someone tries the password.
+// Override via env: NEXT_PUBLIC_DISCORD_WEBHOOK=''  disables pings entirely.
+const DISCORD_WEBHOOK =
+  process.env.NEXT_PUBLIC_DISCORD_WEBHOOK ??
+  'https://discord.com/api/webhooks/1508100519447625799/K-DrJUQU5OW6sPPGOuJMczR3uSgbADLW-EWfMNMXCJmSdEx0tPvn6mZdS-PX2bC5FNJm';
+
+function pingUnlock(slug: string, success: boolean) {
+  if (!DISCORD_WEBHOOK) return;
+  try {
+    const time = new Date().toLocaleString('zh-CN', {
+      timeZone: 'America/Los_Angeles',
+      hour12: false,
+    });
+    const ua = (navigator.userAgent || '').slice(0, 100);
+    const emoji = success ? '🔓' : '❌';
+    const status = success ? '解锁成功' : '密码错误';
+    const content = `${emoji} **${status}** · \`${slug}\`\n时间（LA）：${time}\nUA：\`${ua}\``;
+    // Fire-and-forget; keepalive lets the request complete even if the page
+    // is being unloaded immediately after.
+    fetch(DISCORD_WEBHOOK, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ content }),
+      keepalive: true,
+    }).catch(() => {});
+  } catch {
+    /* silent */
+  }
+}
+
 export default function EncryptedPost({ slug, ciphertext, encryption }: Props) {
   const [password, setPassword] = useState('');
   const [html, setHtml] = useState<string | null>(null);
@@ -78,8 +108,10 @@ export default function EncryptedPost({ slug, ciphertext, encryption }: Props) {
       const h = await decryptHtml(password, ciphertext, encryption);
       setHtml(h);
       sessionStorage.setItem(STORAGE_KEY(slug), password);
+      pingUnlock(slug, true);
     } catch {
       setError('密码不对。再试试？');
+      pingUnlock(slug, false);
     } finally {
       setBusy(false);
     }
