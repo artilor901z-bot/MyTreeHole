@@ -76,7 +76,8 @@ function pingUnlock(slug: string, success: boolean) {
     fetch(DISCORD_WEBHOOK, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ content }),
+      // flags: 4 = SUPPRESS_EMBEDS — no auto link previews in Discord
+      body: JSON.stringify({ content, flags: 4 }),
       keepalive: true,
     }).catch(() => {});
   } catch {

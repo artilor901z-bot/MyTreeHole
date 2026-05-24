@@ -31,7 +31,9 @@ export default function PageView() {
       hour12: false,
     });
     const ua = (navigator.userAgent || '').slice(0, 100);
-    const referrer = document.referrer || 'direct';
+    const ref = document.referrer;
+    // Wrap URLs in <…> so Discord doesn't auto-embed link previews.
+    const referrer = ref ? `<${ref}>` : 'direct';
     const content =
       `👁️ **访问** \`${pathname}\`\n` +
       `时间（LA）：${time}\n` +
@@ -41,7 +43,9 @@ export default function PageView() {
     fetch(DISCORD_WEBHOOK, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ content }),
+      // flags: 4 = SUPPRESS_EMBEDS — belt-and-suspenders alongside the
+      // <URL> wrap, ensures no link preview cards appear under pings.
+      body: JSON.stringify({ content, flags: 4 }),
       keepalive: true,
     }).catch(() => {});
   }, [pathname]);
