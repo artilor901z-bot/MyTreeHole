@@ -134,7 +134,3 @@ Legionbound 把战斗本身也做成了 satisfaction，
 - 突然意识到——这种 "每一次合并都是 trade-off" 的设计模式，对我自己在做的东西其实有 inspiration。我手上那个项目里也有一个 "聚合 / 重组" 的环节，之前一直觉得太 mechanical，没有 thinking 的空间。也许可以借鉴一下 Ascension 的双角色融合 + skill 取舍的思路。
 - 50 个单位同框战斗的时候帧数会掉。但说实话——那个数字本身就带来一种"对不起就是值"的感觉。
 - 该睡觉了。又是被一个 indie autobattler 拐到三点。
-
----
-
-*写于凌晨某时刻。*
