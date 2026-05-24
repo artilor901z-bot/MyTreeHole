@@ -6,13 +6,17 @@ tags: ["自走棋", "Legionbound", "roguelite", "笔记"]
 mood: 充盈
 ---
 
-最近被一个游戏勾住了——**Legionbound**。
+最近玩了下 **Legionbound**。
+想为毕设找点灵感。
 
-简单说就是团本自走棋 + roguelite。
+不过现在没啥兴致直接打开 engine——
+就先文字 mark 一下。
+
+简单说，这游戏是团本自走棋 + roguelite。
 屏幕上最多能站 50 个英雄。
 30 多个职业，每个职业都有自己的 synergy 子分支。
 
-为什么这么上头？我边玩边想了一下，记一些 notes——
+边玩边记一些 notes——
 
 ---
 
