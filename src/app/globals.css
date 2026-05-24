@@ -655,7 +655,19 @@ main.main {
   font-size: 13px;
   color: var(--ink-3);
   font-style: italic;
-  margin-bottom: 32px;
+  margin-bottom: 24px;
+}
+
+.lock-gate .lock-warn {
+  font-size: 13px;
+  color: var(--ink-3);
+  line-height: 1.9;
+  margin: 0 auto 32px;
+  padding: 14px 18px;
+  max-width: 280px;
+  border-top: 1px solid var(--line-soft);
+  border-bottom: 1px solid var(--line-soft);
+  letter-spacing: 0.04em;
 }
 
 .lock-gate form {

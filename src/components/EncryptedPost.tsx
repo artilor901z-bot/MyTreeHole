@@ -101,6 +101,13 @@ export default function EncryptedPost({ slug, ciphertext, encryption }: Props) {
       <div className="lock-icon">◐</div>
       <p className="lock-hint">这一篇上了锁。</p>
       <p className="lock-sub">如果你是它要写给的人，你会知道密码的。</p>
+      <p className="lock-warn">
+        读之前，
+        <br />
+        请先让自己安静一点。
+        <br />
+        不急——慢慢来。
+      </p>
       <form onSubmit={submit}>
         <input
           type="password"
