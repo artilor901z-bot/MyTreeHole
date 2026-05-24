@@ -1,5 +1,5 @@
 ---
-title: Legionbound · 一些上头的笔记
+title: Legionbound · 简记
 date: 2026-05-23
 category: game
 tags: ["自走棋", "Legionbound", "roguelite", "笔记"]
