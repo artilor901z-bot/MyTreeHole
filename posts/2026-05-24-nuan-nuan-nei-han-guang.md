@@ -1,6 +1,6 @@
 ---
 title: 《暖暖内含光》· 怕忘了 mark 一下
-date: 2026-05-24
+date: 2026-05-24T15:00
 tags: ["电影", "笔记"]
 mood: 沉思
 weather: 晴
