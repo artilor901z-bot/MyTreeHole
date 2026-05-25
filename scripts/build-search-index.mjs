@@ -58,7 +58,8 @@ function main() {
       };
     })
     .filter(Boolean)
-    .sort((a, b) => (a.date < b.date ? 1 : -1));
+    // timestamp-based desc sort — robust against YAML mixing Date/string
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
   fs.mkdirSync(path.dirname(OUT), { recursive: true });
   fs.writeFileSync(OUT, JSON.stringify(entries, null, 2), 'utf8');

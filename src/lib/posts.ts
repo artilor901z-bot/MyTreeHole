@@ -141,7 +141,11 @@ export async function getAllPosts(): Promise<Post[]> {
   const files = listFiles();
   const posts = await Promise.all(files.map(readPost));
   const visible = posts.filter((p) => !p.draft);
-  visible.sort((a, b) => (a.date < b.date ? 1 : -1));
+  // Sort by timestamp (newest first). Use getTime() so it works whether
+  // fm.date came in as a YAML Date object ('2026-05-24') or as a string
+  // ('2026-05-24T15:00') — mixed types would otherwise compare as strings
+  // and break ordering.
+  visible.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
   _cache = visible;
   return visible;
 }
