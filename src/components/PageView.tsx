@@ -16,15 +16,8 @@ export default function PageView() {
     if (!DISCORD_WEBHOOK) return;
     if (!pathname) return;
 
-    // De-dupe per session: a refresh of the same page within one
-    // session doesn't re-fire. Navigating to a different page does.
-    const key = `pageview:${pathname}`;
-    try {
-      if (sessionStorage.getItem(key)) return;
-      sessionStorage.setItem(key, '1');
-    } catch {
-      /* sessionStorage may be unavailable; still ping */
-    }
+    // Fire on every pathname change — no session-level de-dup.
+    // Refreshes, repeat visits, and back/forward navigation all ping.
 
     const time = new Date().toLocaleString('zh-CN', {
       timeZone: 'America/Los_Angeles',
