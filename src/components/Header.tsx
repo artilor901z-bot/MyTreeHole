@@ -8,6 +8,7 @@ const NAV = [
   { href: '/',         label: '日志' },
   { href: '/games/',   label: '游戏日志' },
   { href: '/whispers/',label: '悄悄话' },
+  { href: '/notes/',   label: '便签' },
   { href: '/archive/', label: '归档' },
   { href: '/tags/',    label: '标签' },
   { href: '/search/',  label: '寻字' },

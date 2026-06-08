@@ -791,4 +791,147 @@ mark {
   .article-head h1 { font-size: 28px; }
   .year-list li { grid-template-columns: 56px 1fr; }
   .year-list .tail { grid-column: 2; padding-top: 4px; }
+  .note-wall { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
 }
+
+/* ======================================================
+ *  便签 · Note board
+ * ====================================================== */
+
+.notes { animation: fade-up 0.5s var(--ease) both; }
+
+.note-compose {
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  background: var(--bg-soft);
+  padding: 16px;
+  margin-bottom: 40px;
+}
+.note-compose .note-input {
+  border: none;
+  background: transparent;
+  padding: 4px 2px;
+  min-height: 52px;
+}
+.note-compose .note-input:focus { background: transparent; }
+
+.note-compose-foot {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 10px;
+  padding-top: 12px;
+  border-top: 1px dashed var(--line);
+}
+.note-name {
+  border: none;
+  background: transparent;
+  padding: 4px 2px;
+  width: auto;
+  flex: 1;
+  font-size: 13px;
+  color: var(--ink-2);
+}
+.note-name:focus { background: transparent; }
+
+.note-count {
+  font-family: var(--font-serif-latin), Georgia, serif;
+  font-size: 12px;
+  color: var(--ink-3);
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+}
+.note-count.over { color: var(--accent); }
+
+.note-submit {
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  padding: 6px 16px;
+  font-size: 13px;
+  color: var(--ink-2);
+  letter-spacing: 0.1em;
+  transition: color 0.18s var(--ease), border-color 0.18s var(--ease);
+  white-space: nowrap;
+}
+.note-submit:hover:not(:disabled) { color: var(--accent); border-color: var(--accent); }
+.note-submit:disabled { opacity: 0.45; cursor: default; }
+
+.note-error { margin-top: 10px; font-size: 13px; color: var(--accent); }
+
+.note-wall {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 16px;
+}
+
+.note-card {
+  position: relative;
+  background: var(--bg-elev);
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  padding: 18px 16px 14px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+  transition: transform 0.2s var(--ease), box-shadow 0.2s var(--ease);
+  animation: fade-up 0.45s var(--ease) both;
+}
+.note-card:nth-child(3n) { transform: rotate(-0.7deg); }
+.note-card:nth-child(3n+1) { transform: rotate(0.6deg); }
+.note-card:hover {
+  transform: translateY(-2px) rotate(0);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+}
+/* 顶端那点「图钉」 */
+.note-card::before {
+  content: '';
+  position: absolute;
+  top: 8px; left: 50%;
+  width: 6px; height: 6px;
+  margin-left: -3px;
+  border-radius: 50%;
+  background: var(--accent);
+  opacity: 0.7;
+}
+
+.note-text {
+  color: var(--ink);
+  font-size: 15px;
+  line-height: 1.85;
+  white-space: pre-wrap;
+  word-break: break-word;
+  margin: 6px 0 14px;
+}
+
+.note-foot {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 10px;
+  font-size: 12px;
+  color: var(--ink-3);
+  letter-spacing: 0.04em;
+}
+.note-by { font-style: italic; }
+.note-date { font-family: var(--font-serif-latin), Georgia, serif; }
+
+.note-report {
+  position: absolute;
+  top: 10px; right: 10px;
+  font-size: 11px;
+  color: var(--ink-3);
+  opacity: 0;
+  transition: opacity 0.18s var(--ease), color 0.18s var(--ease);
+}
+.note-card:hover .note-report { opacity: 0.6; }
+.note-report:hover { color: var(--accent); opacity: 1; }
+.note-report:disabled { color: var(--ink-3); opacity: 0.5; cursor: default; }
+
+.note-retry {
+  margin-top: 12px;
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  padding: 6px 18px;
+  font-size: 13px;
+  color: var(--ink-2);
+}
+.note-retry:hover { color: var(--accent); border-color: var(--accent); }
