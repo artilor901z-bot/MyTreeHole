@@ -58,7 +58,7 @@ Will 红着眼睛，顿了很久，
 ---
 
 后面还有一场。
-医生站在 Will 面前，
+心理医生 Sean 站在 Will 面前，
 反复对他说同一句话。
 It's not your fault.
 一遍。又一遍。
