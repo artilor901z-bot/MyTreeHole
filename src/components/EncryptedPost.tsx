@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import type { EncryptionParams } from '@/lib/posts';
+import { pingDiscord } from '@/lib/discord';
 
 interface Props {
   slug: string;
@@ -55,13 +56,7 @@ async function decryptHtml(
 const STORAGE_KEY = (slug: string) => `whisper-pwd:${slug}`;
 
 // Owner-only ping: notifies a Discord channel when someone tries the password.
-// Override via env: NEXT_PUBLIC_DISCORD_WEBHOOK=''  disables pings entirely.
-const DISCORD_WEBHOOK =
-  process.env.NEXT_PUBLIC_DISCORD_WEBHOOK ??
-  'https://discord.com/api/webhooks/1508100519447625799/K-DrJUQU5OW6sPPGOuJMczR3uSgbADLW-EWfMNMXCJmSdEx0tPvn6mZdS-PX2bC5FNJm';
-
 function pingUnlock(slug: string, success: boolean) {
-  if (!DISCORD_WEBHOOK) return;
   try {
     const time = new Date().toLocaleString('zh-CN', {
       timeZone: 'America/Los_Angeles',
@@ -71,15 +66,7 @@ function pingUnlock(slug: string, success: boolean) {
     const emoji = success ? '🔓' : '❌';
     const status = success ? '解锁成功' : '密码错误';
     const content = `${emoji} **${status}** · \`${slug}\`\n时间（LA）：${time}\nUA：\`${ua}\``;
-    // Fire-and-forget; keepalive lets the request complete even if the page
-    // is being unloaded immediately after.
-    fetch(DISCORD_WEBHOOK, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      // flags: 4 = SUPPRESS_EMBEDS — no auto link previews in Discord
-      body: JSON.stringify({ content, flags: 4 }),
-      keepalive: true,
-    }).catch(() => {});
+    pingDiscord(content);
   } catch {
     /* silent */
   }

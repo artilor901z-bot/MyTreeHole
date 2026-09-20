@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
+import { pingDiscord } from '@/lib/discord';
 
 // Supabase 数据 API：URL + publishable key 都可以安全暴露在前端，
 // 真正的访问控制靠数据库里的 RLS 策略（见 README / 部署说明）。
@@ -11,11 +12,8 @@ const SUPABASE_KEY =
   process.env.NEXT_PUBLIC_SUPABASE_KEY ||
   'sb_publishable_1wb_jSL65le31EobGo2w0g_E26rIbJ6';
 
-// 举报复用站点已有的 Discord webhook：访客点「举报」，内容 ping 给站长，
-// 站长再去 Supabase 后台删除那一行。
-const DISCORD_WEBHOOK =
-  process.env.NEXT_PUBLIC_DISCORD_WEBHOOK ??
-  'https://discord.com/api/webhooks/1508100519447625799/K-DrJUQU5OW6sPPGOuJMczR3uSgbADLW-EWfMNMXCJmSdEx0tPvn6mZdS-PX2bC5FNJm';
+// 举报复用站点的 Discord 通知（见 src/lib/discord.ts）：访客点「举报」，
+// 内容 ping 给站长，站长再去 Supabase 后台删除那一行。
 
 const MAX_CONTENT = 50;
 const MAX_NAME = 20;
@@ -121,21 +119,12 @@ export default function NoteBoard() {
     if (reported.has(n.id)) return;
     if (!window.confirm('确定要举报这张便签吗？会通知站长来处理。')) return;
     setReported((prev) => new Set(prev).add(n.id));
-    if (!DISCORD_WEBHOOK) return;
-    const body = {
-      content:
-        `🚩 **便签被举报**\n` +
+    pingDiscord(
+      `🚩 **便签被举报**\n` +
         `内容：${n.content}\n` +
         `署名：${n.name || '匿名'}\n` +
-        `id：\`${n.id}\``,
-      flags: 4,
-    };
-    fetch(DISCORD_WEBHOOK, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(body),
-      keepalive: true,
-    }).catch(() => {});
+        `id：\`${n.id}\``
+    );
   }
 
   const remaining = MAX_CONTENT - content.length;

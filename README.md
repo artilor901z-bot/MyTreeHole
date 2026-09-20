@@ -84,6 +84,18 @@ weather: 晴      # 见 src/lib/moods.ts
 > 💡 想让博客私密？把仓库设为 **Private**，GitHub Pages 在付费计划里支持私有部署。
 > 或者不开 Pages、不 push，纯本地 `npm run dev` 自留也完全可以。
 
+### Discord 通知（可选）
+
+访问、悄悄话解锁、便签举报都会 ping 到一个 Discord 频道。webhook 地址**不要写进源码**：
+公开仓库里一出现，Discord 的扫描器几小时内就会把它作废。
+
+1. Discord 服务器 → **设置** → **整合** → **Webhook** → 新建，复制 URL
+2. 存进仓库 Secret：`gh secret set DISCORD_WEBHOOK`（粘贴 URL 回车），或到仓库 **Settings → Secrets and variables → Actions** 手动加
+3. 本地开发想收通知：在项目根目录建 `.env.local`，写一行 `NEXT_PUBLIC_DISCORD_WEBHOOK=<URL>`（已 gitignore）
+4. Cloudflare Pages 镜像如需通知，在其 Environment variables 里加同名变量
+
+不配的话通知静默关闭，其他功能不受影响。webhook 换了只需更新 Secret 再跑一次 workflow。
+
 ## 项目结构
 
 ```

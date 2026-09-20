@@ -40,6 +40,9 @@ jobs:
       - name: Build
         env:
           NEXT_PUBLIC_BASE_PATH: ${{ steps.repo.outputs.basePath }}
+          # Discord 通知 webhook 只存在仓库 Secret 里，构建时注入。
+          # 没设这个 Secret 时为空字符串，站点静默不发通知。
+          NEXT_PUBLIC_DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
         run: npm run build
 
       - name: Add .nojekyll

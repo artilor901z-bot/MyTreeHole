@@ -2,12 +2,10 @@
 
 import { useEffect } from 'react';
 import { usePathname } from 'next/navigation';
+import { DISCORD_WEBHOOK, pingDiscord } from '@/lib/discord';
 
-// Shared webhook — same channel as the lock-gate pings. Owner sees:
+// Same channel as the lock-gate pings. Owner sees:
 //   👁️ visit  vs  🔓 unlock success  vs  ❌ unlock fail
-const DISCORD_WEBHOOK =
-  process.env.NEXT_PUBLIC_DISCORD_WEBHOOK ??
-  'https://discord.com/api/webhooks/1508100519447625799/K-DrJUQU5OW6sPPGOuJMczR3uSgbADLW-EWfMNMXCJmSdEx0tPvn6mZdS-PX2bC5FNJm';
 
 export default function PageView() {
   const pathname = usePathname();
@@ -60,14 +58,7 @@ export default function PageView() {
         (client ? `IP：\`${client}\`\n` : '') +
         `UA：\`${ua}\``;
 
-      fetch(DISCORD_WEBHOOK, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        // flags: 4 = SUPPRESS_EMBEDS — belt-and-suspenders alongside the
-        // <URL> wrap, ensures no link preview cards appear under pings.
-        body: JSON.stringify({ content, flags: 4 }),
-        keepalive: true,
-      }).catch(() => {});
+      pingDiscord(content);
     })();
   }, [pathname]);
 
