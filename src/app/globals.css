@@ -693,6 +693,25 @@ main.main {
   font-style: italic;
 }
 
+/* 站点门锁：<head> 里的 bootstrap 未解锁时给 <html> 挂 data-locked，
+ * 整页被门锁盖住；解锁后摘掉属性，门锁消失、内容显现。 */
+.site-lock { display: none; }
+html[data-locked="1"] .site-lock {
+  display: flex;
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  align-items: center;
+  justify-content: center;
+  padding: 0 var(--gutter);
+  background: var(--bg);
+}
+html[data-locked="1"] .shell { display: none; }
+.site-lock .lock-gate {
+  width: 100%;
+  padding: 0 0 8vh;
+}
+
 /* ======================================================
  *  Comments (cusdis)
  * ====================================================== */
